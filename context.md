@@ -12,14 +12,16 @@ ToolNext/
 ├── README.md           # User documentation
 ├── context.md          # Technical developer context (this file)
 ├── package.json        # Node configuration (Vite devDependency, run scripts)
+├── vite.config.js      # Vite build configuration (disables hashed filenames for offline SW)
 ├── index.html          # Main HTML markup shell for both tools
 ├── styles.css          # Core CSS variables, typography, layouts, animations
 ├── app.js              # Application logic, calculation math, local storage, SW registration
-├── sw.js               # Service Worker caching script (stale-while-revalidate)
-├── manifest.json       # PWA installer specifications
-├── logo.svg            # Base application logo in vector format
-├── logo-192.png        # 192x192 logo icon for manifest
-└── logo-512.png        # 512x512 logo icon for manifest
+└── public/             # Static PWA assets copied directly to build root
+    ├── sw.js           # Service Worker caching script (stale-while-revalidate)
+    ├── manifest.json   # PWA installer specifications
+    ├── logo.svg        # Base application logo in vector format
+    ├── logo-192.png    # 192x192 logo icon for manifest
+    └── logo-512.png    # 512x512 logo icon for manifest
 ```
 
 ---
@@ -31,11 +33,12 @@ ToolNext/
 - **Manifest (`manifest.json`)**: Configured with `display: "standalone"`, `orientation: "portrait-primary"`, and a deep color scheme (`#0a0b1e` theme color) to fit natively on mobile screens when installed.
 
 ### 2. LocalStorage Caching Strategy
-The app caches all user inputs locally in their browser. These are retrieved automatically on page load:
-- `toolnext_dob`: Stores the Date of Birth string (Format: `YYYY-MM-DD`).
-- `toolnext_target_date`: Stores the target date to calculate age against (Format: `YYYY-MM-DD`).
-- `toolnext_maghrib`: Stores Maghrib sunset time (Format: `HH:MM` 24h format).
-- `toolnext_fajr`: Stores Fajr dawn time (Format: `HH:MM` 24h format).
+The app caches user inputs locally in their browser. These are retrieved automatically on page load:
+- `toolnext_dob`: Stores the Date of Birth string (Format: `YYYY-MM-DD`). Defaults to `2000-01-01` on first load if empty.
+- `toolnext_maghrib`: Stores Maghrib sunset time (Format: `HH:MM` 24h format). Defaults to `18:50` on first load if empty.
+- `toolnext_fajr`: Stores Fajr dawn time (Format: `HH:MM` 24h format). Defaults to `03:45` on first load if empty.
+
+*Note: Target Date is intentionally NOT cached to ensure that it always defaults to the current local date (today's date) on page load in the user's timezone.*
 
 When these values are fetched on load, `app.js` runs calculations automatically to display statistics.
 
