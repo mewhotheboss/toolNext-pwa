@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolNext - Age & Tahajjut Calculator</title>
+  <meta name="description" content="A premium, lightweight, and offline-capable toolkit featuring an advanced Age Calculator and Tahajjut Time Calculator.">
+  
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="apple-touch-icon" href="/logo-192.png">
+  <meta name="theme-color" content="#0a0b1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Background Decorative Glowing Blobs -->
+  <div class="glow-bg">
+    <div class="blob blob-purple"></div>
+    <div class="blob blob-cyan"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <img src="/logo.svg" alt="ToolNext Logo" class="app-logo" width="48" height="48">
+        <div>
+          <h1>ToolNext</h1>
+          <p class="subtitle">Smart Offline Utilities</p>
+        </div>
+      </div>
+      <button id="installBtn" class="btn btn-secondary install-btn" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+        </svg>
+        <span>Install App</span>
+      </button>
+    </header>
+
+    <!-- Navigation / Mode Switcher -->
+    <nav class="mode-tabs">
+      <button id="tab-age" class="tab-item active" role="tab" aria-selected="true" aria-controls="panel-age">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Age Calculator
+      </button>
+      <button id="tab-tahajjut" class="tab-item" role="tab" aria-selected="false" aria-controls="panel-tahajjut">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        Tahajjut Calculator
+      </button>
+    </nav>
+
+    <!-- Main Content Panels -->
+    <main class="main-content">
+      
+      <!-- Panel 1: Age Calculator -->
+      <section id="panel-age" class="tab-panel" role="tabpanel" aria-labelledby="tab-age">
+        <div class="card card-input">
+          <h2>Calculate Age</h2>
+          <p class="card-desc">Enter your birth date and the target date to calculate exact age details.</p>
+          
+          <form id="age-form" class="tool-form" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="birth-date">Date of Birth</label>
+                <div class="input-wrapper">
+                  <input type="date" id="birth-date" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="target-date">Target Date</label>
+                <div class="input-wrapper">
+                  <input type="date" id="target-date" required>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">
+              Calculate Age
+            </button>
+          </form>
+        </div>
+
+        <!-- Age Results Section (Hidden initially) -->
+        <div id="age-results" class="results-container" style="display: none;">
+          <!-- Primary Age Output -->
+          <div class="results-primary">
+            <div class="result-box">
+              <span id="result-years" class="number">0</span>
+              <span class="label">Years</span>
+            </div>
+            <div class="result-box">
+              <span id="result-months" class="number">0</span>
+              <span class="label">Months</span>
+            </div>
+            <div class="result-box">
+              <span id="result-days" class="number">0</span>
+              <span class="label">Days</span>
+            </div>
+          </div>
+
+          <!-- Real-time Live Second Counter -->
+          <div class="card card-live-seconds">
+            <div class="live-indicator">
+              <span class="pulse-dot"></span>
+              <span>LIVE LIFE TICKER</span>
+            </div>
+            <div id="live-seconds-value" class="mono-number">0</div>
+            <div class="live-sub">seconds lived since your birth</div>
+          </div>
+
+          <!-- Secondary Detailed Statistics -->
+          <div class="grid-stats">
+            <div class="card stat-card">
+              <h3>Next Birthday</h3>
+              <div id="birthday-countdown" class="stat-value">--</div>
+              <p id="birthday-weekday" class="stat-label">Happening on --</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Total Months</h3>
+              <div id="stat-total-months" class="stat-value mono">--</div>
+              <p class="stat-label">months lived</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Total Weeks</h3>
+              <div id="stat-total-weeks" class="stat-value mono">--</div>
+              <p class="stat-label">weeks lived</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Total Days</h3>
+              <div id="stat-total-days" class="stat-value mono">--</div>
+              <p class="stat-label">days lived</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Total Hours</h3>
+              <div id="stat-total-hours" class="stat-value mono">--</div>
+              <p class="stat-label">hours lived</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Total Minutes</h3>
+              <div id="stat-total-minutes" class="stat-value mono">--</div>
+              <p class="stat-label">minutes lived</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Tahajjut Calculator -->
+      <section id="panel-tahajjut" class="tab-panel" style="display: none;" role="tabpanel" aria-labelledby="tab-tahajjut">
+        <div class="card card-input">
+          <h2>Tahajjut Time Calculator</h2>
+          <p class="card-desc">Enter Maghrib and Fajr times to calculate the starting time for Tahajjut (the last 1/3rd of the night).</p>
+          
+          <form id="tahajjut-form" class="tool-form" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="maghrib-time">Maghrib Time (Sunset)</label>
+                <div class="input-wrapper">
+                  <input type="time" id="maghrib-time" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="fajr-time">Fajr Time (Dawn)</label>
+                <div class="input-wrapper">
+                  <input type="time" id="fajr-time" required>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">
+              Calculate Tahajjut Time
+            </button>
+          </form>
+        </div>
+
+        <!-- Tahajjut Results Section (Hidden initially) -->
+        <div id="tahajjut-results" class="results-container" style="display: none;">
+          <!-- Primary Output Banner -->
+          <div class="card card-highlight">
+            <span class="highlight-title">Tahajjut Time Starts At</span>
+            <div id="tahajjut-start-time" class="highlight-value">--:--</div>
+            <p class="highlight-desc">This marks the start of the final 1/3rd of the night, which is the most blessed time for Tahajjut prayer.</p>
+          </div>
+
+          <!-- Night Timeline Visualizer -->
+          <div class="card card-timeline">
+            <h3>Night Timeline</h3>
+            <p class="timeline-desc">Visual breakdown of the night. Glow represents the Tahajjut window.</p>
+            
+            <div class="visual-timeline-container">
+              <div class="timeline-bar">
+                <div class="timeline-segment part-1" title="First Third"></div>
+                <div class="timeline-segment part-2" title="Second Third"></div>
+                <div class="timeline-segment part-3" title="Last Third (Tahajjut Time)"></div>
+                <!-- Current Time Marker inside timeline -->
+                <div id="timeline-current-marker" class="current-marker" style="display: none;">
+                  <span class="marker-dot"></span>
+                  <span class="marker-label">Now</span>
+                </div>
+              </div>
+              
+              <div class="timeline-labels">
+                <div class="label-item">
+                  <span class="label-time" id="lbl-maghrib">--:--</span>
+                  <span class="label-text">Maghrib</span>
+                </div>
+                <div class="label-item">
+                  <span class="label-time" id="lbl-third1">--:--</span>
+                  <span class="label-text">2nd Third</span>
+                </div>
+                <div class="label-item">
+                  <span class="label-time" id="lbl-third2">--:--</span>
+                  <span class="label-text">Tahajjut Start</span>
+                </div>
+                <div class="label-item">
+                  <span class="label-time" id="lbl-fajr">--:--</span>
+                  <span class="label-text">Fajr</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Night Details Statistics Grid -->
+          <div class="grid-stats">
+            <div class="card stat-card">
+              <h3>Total Night Gap</h3>
+              <div id="tahajjut-total-gap" class="stat-value">--</div>
+              <p class="stat-label">sunset to dawn duration</p>
+            </div>
+            <div class="card stat-card">
+              <h3>First Third Ends</h3>
+              <div id="tahajjut-third-1" class="stat-value mono">--:--</div>
+              <p class="stat-label">ideal for Ishaa & rest</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Second Third Ends</h3>
+              <div id="tahajjut-third-2" class="stat-value mono">--:--</div>
+              <p class="stat-label">mid-night mark</p>
+            </div>
+            <div class="card stat-card">
+              <h3>Tahajjut Window</h3>
+              <div id="tahajjut-duration" class="stat-value mono">--</div>
+              <p class="stat-label">duration of last third</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 ToolNext. Calculated locally in your browser. Complete Privacy & Offline Support.</p>
+    </footer>
+  </div>
+
+  <!-- Javascript -->
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

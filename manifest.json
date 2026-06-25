@@ -1,0 +1,31 @@
+{
+  "name": "ToolNext PWA",
+  "short_name": "ToolNext",
+  "description": "Premium Age Calculator & Tahajjut Time Calculator. Beautiful, fast, and completely offline.",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0b1e",
+  "theme_color": "#6366f1",
+  "status_bar": "black-translucent",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ]
+}
