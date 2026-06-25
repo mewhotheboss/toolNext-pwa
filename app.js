@@ -45,9 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let deferredPrompt = null;
 
   // --- Set Default Dates ---
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
-  targetDateInput.value = todayStr;
+  // Get today's local date (YYYY-MM-DD) in user's local timezone
+  const localToday = new Date();
+  const year = localToday.getFullYear();
+  const month = String(localToday.getMonth() + 1).padStart(2, '0');
+  const day = String(localToday.getDate()).padStart(2, '0');
+  const localTodayStr = `${year}-${month}-${day}`;
+  
+  // Target date ALWAYS defaults to today's local date
+  targetDateInput.value = localTodayStr;
   
   // Set default prayer times if not cached
   maghribInput.value = "18:50"; // 6:50 PM
@@ -56,14 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Load LocalStorage Cached Values ---
   if (localStorage.getItem('toolnext_dob')) {
     birthDateInput.value = localStorage.getItem('toolnext_dob');
-    // Auto-calculate if DOB exists
-    setTimeout(() => {
-      calculateAge();
-    }, 100);
+  } else {
+    // Default DOB to 2000-01-01 if nothing is cached, so the app is immediately active on load
+    birthDateInput.value = "2000-01-01";
   }
-  if (localStorage.getItem('toolnext_target_date')) {
-    targetDateInput.value = localStorage.getItem('toolnext_target_date');
-  }
+
+  // Auto-calculate age on page load using default or cached DOB
+  setTimeout(() => {
+    calculateAge();
+  }, 100);
+
   if (localStorage.getItem('toolnext_maghrib')) {
     maghribInput.value = localStorage.getItem('toolnext_maghrib');
   }
@@ -133,9 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!dobStr || !targetStr) return;
 
-    // Cache values in local storage
+    // Cache DOB in local storage (we don't cache target date so it always defaults to today)
     localStorage.setItem('toolnext_dob', dobStr);
-    localStorage.setItem('toolnext_target_date', targetStr);
 
     const dob = new Date(dobStr);
     const target = new Date(targetStr);
