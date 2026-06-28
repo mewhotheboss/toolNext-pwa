@@ -30,9 +30,21 @@ ToolNext/
 
 ### 1. Progressive Web App (PWA) Setup
 - **Service Worker (`sw.js`)**: Caches static assets (`/`, `index.html`, `styles.css`, `app.js`, `manifest.json`, and logo assets) during the service worker `install` lifecycle. Intercepts network requests using a cache-first approach, serving assets from cache immediately while fetching and updating in the background (stale-while-revalidate).
+  - *Version*: The service worker cache is named `toolnext-cache-v2`. It was incremented to v2 to force invalidation of cached stylesheets and load sidebar navigation style adjustments.
 - **Manifest (`manifest.json`)**: Configured with `display: "standalone"`, `orientation: "portrait-primary"`, and a deep color scheme (`#0a0b1e` theme color) to fit natively on mobile screens when installed.
 
-### 2. LocalStorage Caching Strategy
+### 2. Sidebar Navigation Layout System
+The interface features a responsive layout designed to accommodate future utilities easily:
+- **Structure (`index.html`)**: Wrapping everything in `.app-layout`.
+  - `#sidebar` containing app branding, links, and PWA options.
+  - `#sidebar-backdrop` rendering a dim background blur for mobile drawer.
+  - `.mobile-header` representing a white top-bar header containing a hamburger menu `#menu-toggle` visible only on screen widths `< 900px`.
+- **Drawer Toggling & Tab Switching (`app.js` & `styles.css`)**:
+  - CSS transitions slide the sidebar drawer from `-100%` (hidden) to `0` (opened) when the `.open` class is toggled on mobile view.
+  - Listeners toggle this class on hamburger menu click, close menu click, or backdrop click.
+  - Selecting a calculator tab switches visibility of `#panel-age`/`#panel-tahajjut` and automatically closes the mobile drawer view (`closeSidebar()`).
+
+### 3. LocalStorage Caching Strategy
 The app caches user inputs locally in their browser. These are retrieved automatically on page load:
 - `toolnext_dob`: Stores the Date of Birth string (Format: `YYYY-MM-DD`). Defaults to `2000-01-01` on first load if empty.
 - `toolnext_maghrib`: Stores Maghrib sunset time (Format: `HH:MM` 24h format). Defaults to `18:50` on first load if empty.
@@ -42,7 +54,7 @@ The app caches user inputs locally in their browser. These are retrieved automat
 
 When these values are fetched on load, `app.js` runs calculations automatically to display statistics.
 
-### 3. Calculators Math Logic
+### 4. Calculators Math Logic
 
 #### A. Age Calculator
 - Performs full Date arithmetic:

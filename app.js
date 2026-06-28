@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const installBtn = document.getElementById('installBtn');
 
+  // --- Sidebar Drawer Elements ---
+  const sidebar = document.getElementById('sidebar');
+  const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+  const menuToggle = document.getElementById('menu-toggle');
+  const menuClose = document.getElementById('menu-close');
+
   // --- State Variables ---
   let liveTickerInterval = null;
   let timelineUpdateInterval = null;
@@ -107,6 +113,29 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTimelineMarker();
       }
     }
+    // Auto-close sidebar on mobile after choosing a feature
+    closeSidebar();
+  }
+
+  // --- Sidebar Mobile Drawer Toggles ---
+  if (menuToggle) {
+    menuToggle.addEventListener('click', openSidebar);
+  }
+  if (menuClose) {
+    menuClose.addEventListener('click', closeSidebar);
+  }
+  if (sidebarBackdrop) {
+    sidebarBackdrop.addEventListener('click', closeSidebar);
+  }
+
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.add('open');
+  }
+
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove('open');
   }
 
   // --- Helpers for Formatting ---

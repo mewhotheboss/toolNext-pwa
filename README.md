@@ -4,6 +4,10 @@ ToolNext is a premium, lightweight, and completely offline Progressive Web App (
 1. **Age Calculator**: Compute your exact age in years, months, and days. It features additional details such as total months/weeks/days/hours/minutes lived, a next birthday countdown, and a live seconds counter ticker showing the seconds lived since birth.
 2. **Tahajjut Time Calculator**: Compute the exact phases of the night (first third, second third, and last third/Tahajjut start) based on Maghrib and Fajr times. It features an interactive, glowing Night Timeline showing where you are in the night in real time.
 
+The app uses a scalable, modern **Sidebar Navigation** system to organize features:
+- **Desktop Layout**: A fixed, sticky glassmorphic sidebar docked on the left of the screen for quick switching.
+- **Mobile/Tablet Layout**: A space-saving layout featuring a clean, white top header bar with a hamburger icon that slides open a deep-glass drawer menu with high-contrast text and a dismissible backdrop overlay.
+
 All calculations are executed locally in the browser with **zero external APIs**, making it extremely fast, secure, and 100% offline-ready. Inputs are persisted using `localStorage` so they remain populated upon closing and reopening the app.
 
 ---
@@ -16,8 +20,8 @@ You can deploy this repository to **Vercel** with a single click. It is fully pr
 ## Tech Stack
 - **Core**: Vanilla HTML5, CSS3, JavaScript (ES6 Modules)
 - **Bundler/Dev Server**: Vite
-- **PWA Features**: Service Worker (`sw.js`) for static assets caching, Web App Manifest (`manifest.json`) for installation support.
-- **Design**: Premium glassmorphism, responsive grids, custom Outfit & JetBrains Mono typography, dark and light theme options.
+- **PWA Features**: Service Worker (`sw.js`) for static assets caching (versioned at `v2` for layout changes), Web App Manifest (`manifest.json`) for installation support.
+- **Design**: Premium responsive grid layouts, fixed/drawer sidebar systems, custom Outfit & JetBrains Mono typography, dark and light theme options.
 
 ---
 
