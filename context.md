@@ -30,15 +30,15 @@ ToolNext/
 
 ### 1. Progressive Web App (PWA) Setup
 - **Service Worker (`sw.js`)**: Caches static assets (`/`, `index.html`, `styles.css`, `app.js`, `manifest.json`, and logo assets) during the service worker `install` lifecycle. Intercepts network requests using a cache-first approach, serving assets from cache immediately while fetching and updating in the background (stale-while-revalidate).
-  - *Version*: The service worker cache is named `toolnext-cache-v2`. It was incremented to v2 to force invalidation of cached stylesheets and load sidebar navigation style adjustments.
+  - *Version*: The service worker cache is named `toolnext-cache-v4`. It was incremented to v4 to force invalidation of cached stylesheets and scripts, loading the theme switching features immediately.
 - **Manifest (`manifest.json`)**: Configured with `display: "standalone"`, `orientation: "portrait-primary"`, and a deep color scheme (`#0a0b1e` theme color) to fit natively on mobile screens when installed.
 
 ### 2. Sidebar Navigation Layout System
 The interface features a responsive layout designed to accommodate future utilities easily:
 - **Structure (`index.html`)**: Wrapping everything in `.app-layout`.
-  - `#sidebar` containing app branding, links, and PWA options.
+  - `#sidebar` containing app branding, links, PWA options, and the theme switcher.
   - `#sidebar-backdrop` rendering a dim background blur for mobile drawer.
-  - `.mobile-header` representing a white top-bar header containing a hamburger menu `#menu-toggle` visible only on screen widths `< 900px`.
+  - `.mobile-header` representing an adaptive top-bar header containing a hamburger menu `#menu-toggle` visible only on screen widths `< 900px`. Its background color adapts to dark/light theme choices with glassmorphic transparency.
 - **Drawer Toggling & Tab Switching (`app.js` & `styles.css`)**:
   - CSS transitions slide the sidebar drawer from `-100%` (hidden) to `0` (opened) when the `.open` class is toggled on mobile view.
   - Listeners toggle this class on hamburger menu click, close menu click, or backdrop click.
@@ -49,12 +49,19 @@ The app caches user inputs locally in their browser. These are retrieved automat
 - `toolnext_dob`: Stores the Date of Birth string (Format: `YYYY-MM-DD`). Defaults to `2000-01-01` on first load if empty.
 - `toolnext_maghrib`: Stores Maghrib sunset time (Format: `HH:MM` 24h format). Defaults to `18:50` on first load if empty.
 - `toolnext_fajr`: Stores Fajr dawn time (Format: `HH:MM` 24h format). Defaults to `03:45` on first load if empty.
+- `toolnext_theme`: Stores the selected theme setting (`light`, `dark`, or `system`). Defaults to `system` on first load if empty.
 
 *Note: Target Date is intentionally NOT cached to ensure that it always defaults to the current local date (today's date) on page load in the user's timezone.*
 
 When these values are fetched on load, `app.js` runs calculations automatically to display statistics.
 
-### 4. Calculators Math Logic
+### 4. Theme Changing Architecture
+- **Data Attribute Toggling**: Switching themes sets the `data-theme` attribute on the root `<html>` element (`data-theme="light"` or `data-theme="dark"`). If "system" (auto) is selected, the attribute is removed so that standard `@media (prefers-color-scheme: light)` rules control the layout.
+- **Dynamic Meta Theme-Color**: Syncs browser status bars by updating `<meta name="theme-color">` dynamically to `#0a0b1e` (dark) or `#f8fafc` (light) when themes change.
+- **Picker Indicators Filter**: Selects picker indicators (calendar & clock icons) using Webkit selectors and dynamically inverts them (`filter: var(--input-icon-filter)`) to render as white in dark themes and default dark in light themes.
+- **Transitions**: Applies transitions on color, background-color, border-color, and box-shadow variables to ensure smooth transitions between themes.
+
+### 5. Calculators Math Logic
 
 #### A. Age Calculator
 - Performs full Date arithmetic:

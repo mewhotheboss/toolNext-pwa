@@ -431,6 +431,45 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('ToolNext PWA was installed successfully');
   });
 
+  // --- Theme Changer Logic ---
+  const themeButtons = document.querySelectorAll('.theme-btn');
+  
+  function applyTheme(theme) {
+    if (theme === 'system') {
+      document.documentElement.removeAttribute('data-theme');
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#0a0b1e' : '#f8fafc');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#0a0b1e' : '#f8fafc');
+    }
+    
+    localStorage.setItem('toolnext_theme', theme);
+    
+    themeButtons.forEach(btn => {
+      const isCurrent = btn.getAttribute('data-theme-val') === theme;
+      btn.classList.toggle('active', isCurrent);
+      btn.setAttribute('aria-checked', isCurrent ? 'true' : 'false');
+    });
+  }
+
+  themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const themeVal = btn.getAttribute('data-theme-val');
+      applyTheme(themeVal);
+    });
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    const currentTheme = localStorage.getItem('toolnext_theme') || 'system';
+    if (currentTheme === 'system') {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', e.matches ? '#0a0b1e' : '#f8fafc');
+    }
+  });
+
+  const savedTheme = localStorage.getItem('toolnext_theme') || 'system';
+  applyTheme(savedTheme);
+
   // Register Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

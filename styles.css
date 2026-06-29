@@ -26,28 +26,119 @@
 
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.15s ease;
+  --input-icon-filter: invert(1);
 }
 
-/* Light Theme Override */
+/* Base transitions for smooth theme changing */
+body, aside, main, header, footer, .card, .result-box, .tab-item, .theme-selector, .theme-btn, .mobile-header, input, button {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Light Theme Values defined as reusable tokens */
+:root {
+  --light-bg-primary: #f8fafc;
+  --light-bg-secondary: #f1f5f9;
+  --light-card-bg: rgba(255, 255, 255, 0.75);
+  --light-card-border: rgba(0, 0, 0, 0.06);
+  --light-card-border-hover: rgba(99, 102, 241, 0.3);
+  
+  --light-text-primary: #0f172a;
+  --light-text-secondary: #475569;
+  --light-text-muted: #94a3b8;
+  --light-card-bg-highlight: rgba(255, 255, 255, 0.9);
+
+  /* Responsive variables for mobile drawer (Dark Theme Default) */
+  --sidebar-mobile-bg: rgba(10, 11, 30, 0.98);
+  --sidebar-mobile-text: #ffffff;
+  --sidebar-mobile-muted: rgba(255, 255, 255, 0.6);
+  --sidebar-mobile-btn-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-mobile-active-bg: rgba(99, 102, 241, 0.25);
+  --sidebar-mobile-active-border: rgba(99, 102, 241, 0.4);
+}
+
+/* Explicit Light Theme Override */
+html[data-theme="light"] {
+  --bg-primary: var(--light-bg-primary);
+  --bg-secondary: var(--light-bg-secondary);
+  --card-bg: var(--light-card-bg);
+  --card-border: var(--light-card-border);
+  --card-border-hover: var(--light-card-border-hover);
+  
+  --text-primary: var(--light-text-primary);
+  --text-secondary: var(--light-text-secondary);
+  --text-muted: var(--light-text-muted);
+  --card-bg-highlight: var(--light-card-bg-highlight);
+
+  /* Light theme values for mobile drawer variables */
+  --sidebar-mobile-bg: rgba(255, 255, 255, 0.98);
+  --sidebar-mobile-text: var(--light-text-primary);
+  --sidebar-mobile-muted: var(--light-text-secondary);
+  --sidebar-mobile-btn-hover: rgba(0, 0, 0, 0.05);
+  --sidebar-mobile-active-bg: rgba(99, 102, 241, 0.1);
+  --sidebar-mobile-active-border: rgba(99, 102, 241, 0.15);
+  --input-icon-filter: invert(0);
+}
+
+html[data-theme="light"] .sidebar-copyright {
+  color: var(--light-text-primary);
+}
+
+html[data-theme="light"] .blob {
+  opacity: 0.12;
+}
+
+/* Explicit Dark Theme Override */
+html[data-theme="dark"] {
+  --bg-primary: #05060f;
+  --bg-secondary: #0c0e1e;
+  --card-bg: rgba(18, 20, 38, 0.55);
+  --card-border: rgba(255, 255, 255, 0.07);
+  --card-border-hover: rgba(99, 102, 241, 0.4);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --card-bg-highlight: rgba(18, 20, 38, 0.7);
+
+  --sidebar-mobile-bg: rgba(10, 11, 30, 0.98);
+  --sidebar-mobile-text: #ffffff;
+  --sidebar-mobile-muted: rgba(255, 255, 255, 0.6);
+  --sidebar-mobile-btn-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-mobile-active-bg: rgba(99, 102, 241, 0.25);
+  --sidebar-mobile-active-border: rgba(99, 102, 241, 0.4);
+  --input-icon-filter: invert(1);
+}
+
+/* System Default Light Mode (only if not explicitly set to dark) */
 @media (prefers-color-scheme: light) {
-  /* We maintain a slightly dark tinted mode or full light mode. 
-     Let's build a beautiful sleek light mode that doesn't lose the premium feel. */
-  :root {
-    --bg-primary: #f8fafc;
-    --bg-secondary: #f1f5f9;
-    --card-bg: rgba(255, 255, 255, 0.75);
-    --card-border: rgba(0, 0, 0, 0.06);
-    --card-border-hover: rgba(99, 102, 241, 0.3);
+  html:not([data-theme="dark"]) {
+    --bg-primary: var(--light-bg-primary);
+    --bg-secondary: var(--light-bg-secondary);
+    --card-bg: var(--light-card-bg);
+    --card-border: var(--light-card-border);
+    --card-border-hover: var(--light-card-border-hover);
     
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    
-    --card-bg-highlight: rgba(255, 255, 255, 0.9);
+    --text-primary: var(--light-text-primary);
+    --text-secondary: var(--light-text-secondary);
+    --text-muted: var(--light-text-muted);
+    --card-bg-highlight: var(--light-card-bg-highlight);
+
+    /* Light theme values for mobile drawer variables */
+    --sidebar-mobile-bg: rgba(255, 255, 255, 0.98);
+    --sidebar-mobile-text: var(--light-text-primary);
+    --sidebar-mobile-muted: var(--light-text-secondary);
+    --sidebar-mobile-btn-hover: rgba(0, 0, 0, 0.05);
+    --sidebar-mobile-active-bg: rgba(99, 102, 241, 0.1);
+    --sidebar-mobile-active-border: rgba(99, 102, 241, 0.15);
+    --input-icon-filter: invert(0);
   }
 
-  .sidebar-copyright {
-    color: #000000;
+  html:not([data-theme="dark"]) .sidebar-copyright {
+    color: var(--light-text-primary);
+  }
+
+  html:not([data-theme="dark"]) .blob {
+    opacity: 0.12;
   }
 }
 
@@ -427,6 +518,19 @@ input[type="time"]:focus {
   border-color: var(--primary);
   background: rgba(15, 23, 42, 0.5);
   box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: var(--input-icon-filter);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: var(--transition-fast);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 /* Buttons */
@@ -885,6 +989,94 @@ input[type="time"]:focus {
   }
 }
 
+/* Theme Switcher Styling */
+.theme-selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.theme-selector-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding-left: 0.25rem;
+}
+
+.theme-selector {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 3px;
+  border: 1px solid var(--card-border);
+  width: 100%;
+}
+
+/* Light mode overrides for theme selector */
+html[data-theme="light"] .theme-selector {
+  background: rgba(0, 0, 0, 0.05);
+}
+@media (prefers-color-scheme: light) {
+  html:not([data-theme="dark"]) .theme-selector {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.theme-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.5rem 0.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.theme-btn svg {
+  stroke: currentColor;
+  opacity: 0.8;
+  transition: var(--transition-smooth);
+}
+
+.theme-btn span {
+  font-size: 0.75rem;
+}
+
+.theme-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="light"] .theme-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+@media (prefers-color-scheme: light) {
+  html:not([data-theme="dark"]) .theme-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.theme-btn.active {
+  color: #ffffff !important;
+  background: var(--primary) !important;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.theme-btn.active svg {
+  opacity: 1;
+}
+
 /* Responsive Styles for Sidebar Drawer on Mobile & Tablet */
 @media (max-width: 899px) {
   body {
@@ -907,8 +1099,8 @@ input[type="time"]:focus {
     border-radius: 0 24px 24px 0;
     z-index: 1000;
     transform: translateX(-100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(10, 11, 30, 0.98);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease;
+    background: var(--sidebar-mobile-bg);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border-left: none;
@@ -923,85 +1115,87 @@ input[type="time"]:focus {
   }
 
   .sidebar-header h1 {
-    color: #ffffff !important;
+    color: var(--sidebar-mobile-text) !important;
   }
 
   .sidebar .subtitle {
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: var(--sidebar-mobile-muted) !important;
   }
 
-  /* Make close menu icon button white in sidebar */
+  /* Make close menu icon button adapt in sidebar */
   .sidebar .btn-icon {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: var(--sidebar-mobile-muted) !important;
   }
 
   .sidebar .btn-icon:hover {
-    color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--sidebar-mobile-text) !important;
+    background: var(--sidebar-mobile-btn-hover) !important;
   }
 
-  /* White navigation items in dark mobile drawer */
+  /* Navigation items in mobile drawer */
   .sidebar .tab-item {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: var(--sidebar-mobile-muted) !important;
   }
 
   .sidebar .tab-item svg {
-    stroke: rgba(255, 255, 255, 0.8) !important;
+    stroke: var(--sidebar-mobile-muted) !important;
   }
 
   .sidebar .tab-item:hover {
-    color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--sidebar-mobile-text) !important;
+    background: var(--sidebar-mobile-btn-hover) !important;
+    border-color: var(--sidebar-mobile-btn-hover) !important;
   }
 
   .sidebar .tab-item.active {
-    background: rgba(99, 102, 241, 0.25) !important;
-    color: #ffffff !important;
-    border-color: rgba(99, 102, 241, 0.4) !important;
+    background: var(--sidebar-mobile-active-bg) !important;
+    color: var(--sidebar-mobile-text) !important;
+    border-color: var(--sidebar-mobile-active-border) !important;
   }
 
   .sidebar .tab-item.active svg {
-    stroke: #ffffff !important;
+    stroke: var(--primary) !important;
   }
 
-  /* High contrast PWA Install Button in mobile drawer */
+  /* Adaptive PWA Install Button in mobile drawer */
   .sidebar .install-btn {
-    background: rgba(255, 255, 255, 0.12) !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
+    background: var(--sidebar-mobile-btn-hover) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--sidebar-mobile-text) !important;
   }
 
   .sidebar .install-btn:hover {
-    background: rgba(255, 255, 255, 0.18) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: var(--sidebar-mobile-btn-hover) !important;
+    border-color: var(--sidebar-mobile-text) !important;
   }
 
   .sidebar-copyright {
-    color: #ffffff !important;
+    color: var(--sidebar-mobile-muted) !important;
   }
 
-  /* White mobile top header bar */
+  /* Adaptive mobile top header bar */
   .mobile-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
     border-radius: 16px;
     padding: 0.75rem 1rem;
     width: 100%;
     margin-bottom: 0.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
-  /* Dark hamburger icon on white background */
+  /* Adaptive hamburger icon on mobile header background */
   .mobile-header .btn-icon {
-    color: #0f172a !important;
+    color: var(--text-primary) !important;
   }
 
   .mobile-header .btn-icon:hover {
-    background: rgba(0, 0, 0, 0.05) !important;
+    background: var(--sidebar-mobile-btn-hover) !important;
   }
 
   .mobile-logo-area {
