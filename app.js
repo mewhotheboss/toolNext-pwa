@@ -12,14 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const resYears = document.getElementById('result-years');
   const resMonths = document.getElementById('result-months');
   const resDays = document.getElementById('result-days');
-  const liveSecondsVal = document.getElementById('live-seconds-value');
   const bdayCountdown = document.getElementById('birthday-countdown');
   const bdayWeekday = document.getElementById('birthday-weekday');
   const statMonths = document.getElementById('stat-total-months');
-  const statWeeks = document.getElementById('stat-total-weeks');
   const statDays = document.getElementById('stat-total-days');
-  const statHours = document.getElementById('stat-total-hours');
-  const statMinutes = document.getElementById('stat-total-minutes');
 
   const tahajjutForm = document.getElementById('tahajjut-form');
   const maghribInput = document.getElementById('maghrib-time');
@@ -46,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuClose = document.getElementById('menu-close');
 
   // --- State Variables ---
-  let liveTickerInterval = null;
   let timelineUpdateInterval = null;
   let deferredPrompt = null;
 
@@ -227,16 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
       totalMonths--;
     }
 
-    const totalWeeks = Math.floor(totalDays / 7);
-    const remDaysInWeeks = totalDays % 7;
-    const totalHours = totalDays * 24;
-    const totalMinutes = totalHours * 60;
-
     statMonths.textContent = totalMonths.toLocaleString();
-    statWeeks.textContent = `${totalWeeks.toLocaleString()}w ${remDaysInWeeks}d`;
     statDays.textContent = totalDays.toLocaleString();
-    statHours.textContent = totalHours.toLocaleString();
-    statMinutes.textContent = totalMinutes.toLocaleString();
 
     // Next Birthday Countdown
     let nextBday = new Date(d2.getFullYear(), d1.getMonth(), d1.getDate());
@@ -277,24 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Setup Live Seconds Ticker (always counting relative to current time)
-    if (liveTickerInterval) clearInterval(liveTickerInterval);
-    
-    // Set birth time to midnight
-    const dobWithTime = new Date(dob.getFullYear(), dob.getMonth(), dob.getDate(), 0, 0, 0);
-    
-    function tick() {
-      const now = new Date();
-      if (now < dobWithTime) {
-        liveSecondsVal.textContent = "0";
-        return;
-      }
-      const secondsLived = Math.floor((now - dobWithTime) / 1000);
-      liveSecondsVal.textContent = secondsLived.toLocaleString();
-    }
-    
-    tick();
-    liveTickerInterval = setInterval(tick, 1000);
 
     // Show Results
     ageResults.style.display = 'flex';

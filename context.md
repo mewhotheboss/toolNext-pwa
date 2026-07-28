@@ -67,9 +67,8 @@ When these values are fetched on load, `app.js` runs calculations automatically 
 - Performs full Date arithmetic:
   1. Computes total year difference.
   2. Adjusts months and days according to negative values and different month days (accounting for leap years in February).
-  3. Displays secondary stats (total months, weeks, days, hours, minutes lived).
-  4. Keeps a live ticker counting seconds lived since birth using an interval of 1 second.
-  5. Computes the next birthday countdown and shows which weekday the birthday falls on.
+  3. Displays secondary stats (total months and total days lived).
+  4. Computes the next birthday countdown and shows which weekday the birthday falls on.
 
 #### B. Tahajjut Time Calculator
 - Divides the night into three equal parts (thirds) from Maghrib (sunset) to Fajr (dawn):
