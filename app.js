@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- DOM Elements ---
   const tabAge = document.getElementById('tab-age');
   const tabTahajjut = document.getElementById('tab-tahajjut');
+  const tabBmi = document.getElementById('tab-bmi');
   const panelAge = document.getElementById('panel-age');
   const panelTahajjut = document.getElementById('panel-tahajjut');
+  const panelBmi = document.getElementById('panel-bmi');
 
   const ageForm = document.getElementById('age-form');
   const birthDateInput = document.getElementById('birth-date');
@@ -32,6 +34,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const lblThird2 = document.getElementById('lbl-third2');
   const lblFajr = document.getElementById('lbl-fajr');
   const currentMarker = document.getElementById('timeline-current-marker');
+
+  const bmiForm = document.getElementById('bmi-form');
+  const bmiAgeInput = document.getElementById('bmi-age');
+  const bmiGenderMale = document.getElementById('bmi-gender-male');
+  const bmiGenderFemale = document.getElementById('bmi-gender-female');
+  const heightFtInput = document.getElementById('bmi-height-ft');
+  const heightInInput = document.getElementById('bmi-height-in');
+  const weightInput = document.getElementById('bmi-weight');
+  const bmiClearBtn = document.getElementById('bmi-clear-btn');
+  const bmiResults = document.getElementById('bmi-results');
+  const bmiValDisplay = document.getElementById('bmi-val-display');
+  const bmiCategoryBadge = document.getElementById('bmi-category-badge');
+  const bmiHealthyRange = document.getElementById('bmi-healthy-range');
+  const bmiWeightDiff = document.getElementById('bmi-weight-diff');
+  const bmiWeightDiffLabel = document.getElementById('bmi-weight-diff-label');
+  const bmiPrime = document.getElementById('bmi-prime');
+  const bmiGaugeNeedle = document.getElementById('bmi-gauge-needle');
 
   const installBtn = document.getElementById('installBtn');
 
@@ -87,26 +106,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Tab Navigation Logic ---
   tabAge.addEventListener('click', () => switchTab('age'));
   tabTahajjut.addEventListener('click', () => switchTab('tahajjut'));
+  tabBmi.addEventListener('click', () => switchTab('bmi'));
 
   function switchTab(mode) {
+    tabAge.classList.remove('active');
+    tabAge.setAttribute('aria-selected', 'false');
+    tabTahajjut.classList.remove('active');
+    tabTahajjut.setAttribute('aria-selected', 'false');
+    tabBmi.classList.remove('active');
+    tabBmi.setAttribute('aria-selected', 'false');
+    
+    panelAge.style.display = 'none';
+    panelTahajjut.style.display = 'none';
+    panelBmi.style.display = 'none';
+
     if (mode === 'age') {
       tabAge.classList.add('active');
       tabAge.setAttribute('aria-selected', 'true');
-      tabTahajjut.classList.remove('active');
-      tabTahajjut.setAttribute('aria-selected', 'false');
       panelAge.style.display = 'block';
-      panelTahajjut.style.display = 'none';
-    } else {
+    } else if (mode === 'tahajjut') {
       tabTahajjut.classList.add('active');
       tabTahajjut.setAttribute('aria-selected', 'true');
-      tabAge.classList.remove('active');
-      tabAge.setAttribute('aria-selected', 'false');
       panelTahajjut.style.display = 'block';
-      panelAge.style.display = 'none';
-      // Trigger timeline refresh when switching tab to ensure timeline marker is up-to-date
       if (tahajjutResults.style.display !== 'none') {
         updateTimelineMarker();
       }
+    } else if (mode === 'bmi') {
+      tabBmi.classList.add('active');
+      tabBmi.setAttribute('aria-selected', 'true');
+      panelBmi.style.display = 'block';
     }
     // Auto-close sidebar on mobile after choosing a feature
     closeSidebar();
@@ -368,6 +396,203 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       currentMarker.style.display = 'none';
     }
+  }
+
+  // --- BMI Calculator Section ---
+  const genderMaleLabel = document.getElementById('gender-male-label');
+  const genderFemaleLabel = document.getElementById('gender-female-label');
+  
+  bmiGenderMale.addEventListener('change', () => {
+    genderMaleLabel.classList.add('active');
+    genderFemaleLabel.classList.remove('active');
+  });
+  
+  bmiGenderFemale.addEventListener('change', () => {
+    genderFemaleLabel.classList.add('active');
+    genderMaleLabel.classList.remove('active');
+  });
+
+  // Load Cached BMI Values
+  if (localStorage.getItem('toolnext_bmi_age')) {
+    bmiAgeInput.value = localStorage.getItem('toolnext_bmi_age');
+  }
+  if (localStorage.getItem('toolnext_bmi_gender')) {
+    const gender = localStorage.getItem('toolnext_bmi_gender');
+    if (gender === 'female') {
+      bmiGenderFemale.checked = true;
+      genderFemaleLabel.classList.add('active');
+      genderMaleLabel.classList.remove('active');
+    }
+  }
+  if (localStorage.getItem('toolnext_bmi_height_ft')) {
+    heightFtInput.value = localStorage.getItem('toolnext_bmi_height_ft');
+  }
+  if (localStorage.getItem('toolnext_bmi_height_in')) {
+    heightInInput.value = localStorage.getItem('toolnext_bmi_height_in');
+  }
+  if (localStorage.getItem('toolnext_bmi_weight')) {
+    weightInput.value = localStorage.getItem('toolnext_bmi_weight');
+  }
+
+  // Submit Handler
+  bmiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calculateBmi();
+  });
+
+  // Clear Handler
+  bmiClearBtn.addEventListener('click', () => {
+    bmiForm.reset();
+    
+    // Explicitly reset inputs to standard defaults
+    bmiAgeInput.value = "25";
+    heightFtInput.value = "5";
+    heightInInput.value = "10";
+    weightInput.value = "70";
+    
+    genderMaleLabel.classList.add('active');
+    genderFemaleLabel.classList.remove('active');
+    bmiResults.style.display = 'none';
+    
+    localStorage.removeItem('toolnext_bmi_age');
+    localStorage.removeItem('toolnext_bmi_gender');
+    localStorage.removeItem('toolnext_bmi_height_ft');
+    localStorage.removeItem('toolnext_bmi_height_in');
+    localStorage.removeItem('toolnext_bmi_weight');
+  });
+
+  function calculateBmi() {
+    const age = parseInt(bmiAgeInput.value);
+    const gender = bmiGenderMale.checked ? 'male' : 'female';
+    
+    if (isNaN(age) || age < 2 || age > 120) {
+      alert("Please enter a valid age between 2 and 120.");
+      return;
+    }
+    
+    const ft = parseInt(heightFtInput.value);
+    const inch = parseFloat(heightInInput.value) || 0;
+    const weight = parseFloat(weightInput.value);
+    
+    if (isNaN(ft) || ft < 1 || ft > 10 || isNaN(inch) || inch < 0 || inch >= 12) {
+      alert("Please enter a valid height in feet and inches (1-10 ft, 0-11 in).");
+      return;
+    }
+    if (isNaN(weight) || weight < 2 || weight > 600) {
+      alert("Please enter a valid weight between 2 and 600 kg.");
+      return;
+    }
+    
+    const totalInches = ft * 12 + inch;
+    const heightM = totalInches * 0.0254;
+    const weightKg = weight;
+    
+    localStorage.setItem('toolnext_bmi_age', age);
+    localStorage.setItem('toolnext_bmi_gender', gender);
+    localStorage.setItem('toolnext_bmi_height_ft', ft);
+    localStorage.setItem('toolnext_bmi_height_in', inch);
+    localStorage.setItem('toolnext_bmi_weight', weight);
+    
+    const bmi = weightKg / (heightM * heightM);
+    const prime = bmi / 25;
+    
+    const minHealthyKg = 18.5 * (heightM * heightM);
+    const maxHealthyKg = 24.99 * (heightM * heightM);
+    
+    const healthyRangeText = `${minHealthyKg.toFixed(1)} kg - ${maxHealthyKg.toFixed(1)} kg`;
+    
+    let diffText = "";
+    let diffLabel = "";
+    if (bmi < 18.5) {
+      const diffKg = minHealthyKg - weightKg;
+      diffText = `Gain ${diffKg.toFixed(1)} kg`;
+      diffLabel = "to reach normal range (BMI 18.5)";
+    } else if (bmi >= 18.5 && bmi < 25.0) {
+      diffText = "0.0 kg (Normal)";
+      diffLabel = "you are in the healthy range";
+    } else {
+      const diffKg = weightKg - maxHealthyKg;
+      diffText = `Lose ${diffKg.toFixed(1)} kg`;
+      diffLabel = "to reach normal range (BMI 24.9)";
+    }
+    
+    let category = "";
+    let badgeClass = "";
+    let refRowId = "";
+    
+    if (bmi < 16.0) {
+      category = "Severe Thinness";
+      badgeClass = "underweight";
+      refRowId = "ref-severe-thinness";
+    } else if (bmi >= 16.0 && bmi < 17.0) {
+      category = "Moderate Thinness";
+      badgeClass = "underweight";
+      refRowId = "ref-moderate-thinness";
+    } else if (bmi >= 17.0 && bmi < 18.5) {
+      category = "Mild Thinness";
+      badgeClass = "underweight";
+      refRowId = "ref-mild-thinness";
+    } else if (bmi >= 18.5 && bmi < 25.0) {
+      category = "Normal Weight";
+      badgeClass = "normal";
+      refRowId = "ref-normal";
+    } else if (bmi >= 25.0 && bmi < 30.0) {
+      category = "Overweight";
+      badgeClass = "overweight";
+      refRowId = "ref-overweight";
+    } else if (bmi >= 30.0 && bmi < 35.0) {
+      category = "Obese Class I (Moderate)";
+      badgeClass = "obese";
+      refRowId = "ref-obese-1";
+    } else if (bmi >= 35.0 && bmi < 40.0) {
+      category = "Obese Class II (Severe)";
+      badgeClass = "obese";
+      refRowId = "ref-obese-2";
+    } else {
+      category = "Obese Class III (Very Severe)";
+      badgeClass = "obese";
+      refRowId = "ref-obese-3";
+    }
+    
+    bmiValDisplay.textContent = bmi.toFixed(1);
+    bmiCategoryBadge.textContent = category;
+    bmiCategoryBadge.className = `bmi-badge ${badgeClass}`;
+    
+    bmiHealthyRange.textContent = healthyRangeText;
+    bmiWeightDiff.textContent = diffText;
+    bmiWeightDiffLabel.textContent = diffLabel;
+    bmiPrime.textContent = prime.toFixed(2);
+    
+    document.querySelectorAll('.bmi-ref-table tr').forEach(row => {
+      row.classList.remove('active-result-row');
+    });
+    const activeRow = document.getElementById(refRowId);
+    if (activeRow) {
+      activeRow.classList.add('active-result-row');
+    }
+    
+    let angle = -90;
+    if (bmi <= 15) {
+      angle = -90;
+    } else if (bmi >= 40) {
+      angle = 90;
+    } else {
+      angle = -90 + ((bmi - 15) / 25) * 180;
+    }
+    
+    bmiGaugeNeedle.style.transform = `rotate(${angle}deg)`;
+    bmiResults.style.display = 'flex';
+    
+    if (window.innerWidth < 600) {
+      bmiResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  // Auto-calculate on initial load if we have cached weight data
+  if (localStorage.getItem('toolnext_bmi_weight')) {
+    setTimeout(() => {
+      calculateBmi();
+    }, 100);
   }
 
   // --- PWA Installation & Service Worker Integration ---
