@@ -30,7 +30,7 @@ ToolNext/
 
 ### 1. Progressive Web App (PWA) Setup
 - **Service Worker (`sw.js`)**: Caches static assets (`/`, `index.html`, `styles.css`, `app.js`, `manifest.json`, and logo assets) during the service worker `install` lifecycle. Intercepts network requests using a cache-first approach, serving assets from cache immediately while fetching and updating in the background (stale-while-revalidate).
-  - *Version*: The service worker cache is named `toolnext-cache-v4`. It was incremented to v4 to force invalidation of cached stylesheets and scripts, loading the theme switching features immediately.
+  - *Version*: The service worker cache is named `toolnext-cache-v7`. It was incremented to v7 to invalidate the old cache and load the customized BMI Calculator features instantly.
 - **Manifest (`manifest.json`)**: Configured with `display: "standalone"`, `orientation: "portrait-primary"`, and a deep color scheme (`#0a0b1e` theme color) to fit natively on mobile screens when installed.
 
 ### 2. Sidebar Navigation Layout System
@@ -50,6 +50,11 @@ The app caches user inputs locally in their browser. These are retrieved automat
 - `toolnext_maghrib`: Stores Maghrib sunset time (Format: `HH:MM` 24h format). Defaults to `18:50` on first load if empty.
 - `toolnext_fajr`: Stores Fajr dawn time (Format: `HH:MM` 24h format). Defaults to `03:45` on first load if empty.
 - `toolnext_theme`: Stores the selected theme setting (`light`, `dark`, or `system`). Defaults to `system` on first load if empty.
+- `toolnext_bmi_age`: Stores the user's age (2-120). Defaults to `25`.
+- `toolnext_bmi_gender`: Stores the user's gender (`male` or `female`). Defaults to `male`.
+- `toolnext_bmi_height_ft`: Stores height feet component (1-10). Defaults to `5`.
+- `toolnext_bmi_height_in`: Stores height inches component (0-11). Defaults to `10`.
+- `toolnext_bmi_weight`: Stores weight in kg (2-600). Defaults to `70`.
 
 *Note: Target Date is intentionally NOT cached to ensure that it always defaults to the current local date (today's date) on page load in the user's timezone.*
 
@@ -79,6 +84,15 @@ When these values are fetched on load, `app.js` runs calculations automatically 
   5. **Second Third End / Tahajjut Start**: `maghrib + (total_gap * 2 / 3)`
   6. Renders a linear segmented bar graph visualizing the thirds. Highlights the third segment (Tahajjut window) using a glowing linear gradient.
   7. Calculates current time alignment and overlays a white dot indicator along the timeline representing "Now" if current time is within the night gap.
+
+#### C. BMI Calculator
+- Performs body mass index calculations using unified units (Height in Feet/Inches, Weight in kg):
+  1. Converts feet & inches to meters: $\text{Height} = (\text{Feet} \times 12 + \text{Inches}) \times 0.0254$.
+  2. BMI formula: $\text{Weight (kg)} / \text{Height (meters)}^2$.
+  3. BMI Prime: $\text{BMI} / 25$.
+  4. Healthy weight range limits (for BMI 18.5 to 24.9): $18.5 \times \text{Height}^2$ and $24.99 \times \text{Height}^2$ kg.
+  5. Weight Difference calculation: Determines target weight changes (loss or gain) in kg required to reach the normal BMI thresholds.
+  6. Gauge animation needle angle: Maps BMI 15-40 to $-90^\circ$ to $+90^\circ$ scale.
 
 ---
 

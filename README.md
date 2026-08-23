@@ -1,9 +1,10 @@
 # ToolNext PWA
 
-ToolNext is a premium, lightweight, and completely offline Progressive Web App (PWA) that contains three essential utility tools:
+ToolNext is a premium, lightweight, and completely offline Progressive Web App (PWA) that contains essential utility tools:
 1. **Age Calculator**: Compute your exact age in years, months, and days. It features additional details such as total months and total days lived, and a next birthday countdown.
 2. **Tahajjut Time Calculator**: Compute the exact phases of the night (first third, second third, and last third/Tahajjut start) based on Maghrib and Fajr times. It features an interactive, glowing Night Timeline showing where you are in the night in real time.
-3. **Theme Switcher**: Change the application's look on-the-fly with **Light**, **Dark**, and **System Default (Auto)** theme options. The selection is persistent and adapts both the mobile UI components and native date/time picker indicator elements seamlessly.
+3. **BMI Calculator**: Calculate your Body Mass Index (BMI) using a unified, clean interface with height in feet/inches and weight in kilograms. It shows your exact BMI value, WHO category badge, healthy weight range limits, and how much weight you need to gain/lose to reach a normal weight, along with an animated SVG gauge.
+4. **Theme Switcher**: Change the application's look on-the-fly with **Light**, **Dark**, and **System Default (Auto)** theme options. The selection is persistent and adapts both the mobile UI components and native date/time picker indicator elements seamlessly.
 
 The app uses a scalable, modern **Sidebar Navigation** system to organize features:
 - **Desktop Layout**: A fixed, sticky glassmorphic sidebar docked on the left of the screen for quick switching.
@@ -21,7 +22,7 @@ You can deploy this repository to **Vercel** with a single click. It is fully pr
 ## Tech Stack
 - **Core**: Vanilla HTML5, CSS3, JavaScript (ES6 Modules)
 - **Bundler/Dev Server**: Vite
-- **PWA Features**: Service Worker (`sw.js`) for static assets caching (versioned at `v5` to force immediate updates of stylesheets and scripts), Web App Manifest (`manifest.json`) for installation support.
+- **PWA Features**: Service Worker (`sw.js`) for static assets caching (versioned at `v7` to force immediate updates of stylesheets and scripts), Web App Manifest (`manifest.json`) for installation support.
 - **Design**: Premium responsive grid layouts, fixed/drawer sidebar systems, custom Outfit & JetBrains Mono typography, adaptive picker icons, and smooth CSS theme transitions.
 
 ---
